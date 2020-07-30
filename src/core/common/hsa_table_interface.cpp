@@ -1075,3 +1075,9 @@ hsa_status_t hsa_amd_ipc_memory_attach(const hsa_amd_ipc_memory_t* ipc, size_t l
 hsa_status_t hsa_amd_ipc_memory_detach(void* mapped_ptr) {
   return amdExtTable->hsa_amd_ipc_memory_detach_fn(mapped_ptr);
 }
+
+// Mirrors Amd Extension Apis
+hsa_status_t HSA_API hsa_amd_queue_set_priority(hsa_queue_t* queue,
+                                                hsa_amd_queue_priority_t priority) {
+  return amdExtTable->hsa_amd_queue_set_priority_fn(queue, priority);
+}

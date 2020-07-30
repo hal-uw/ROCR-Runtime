@@ -72,6 +72,9 @@ class AqlQueue : public core::Queue, public core::Signal {
   /// @brief Queue interfaces
   hsa_status_t Inactivate() override;
 
+  /// @brief Change the scheduling priority of the queue
+  hsa_status_t SetPriority(HSA_QUEUE_PRIORITY priority) override;
+
   /// @brief Atomically reads the Read index of with Acquire semantics
   ///
   /// @return uint64_t Value of read index
@@ -359,6 +362,9 @@ class AqlQueue : public core::Queue, public core::Signal {
   /// that enable kernel access scratch memory
   void InitScratchSRD();
 
+  /// @brief Halt the queue without destroying it or fencing memory.
+  void Suspend();
+
   // AQL packet ring buffer
   void* ring_buf_;
 
@@ -397,6 +403,12 @@ class AqlQueue : public core::Queue, public core::Signal {
   void* pm4_ib_buf_;
   uint32_t pm4_ib_size_b_;
   KernelMutex pm4_ib_mutex_;
+
+  // Queue currently suspended or scheduled
+  bool suspended_;
+
+  // Thunk dispatch and wavefront scheduling priority
+  HSA_QUEUE_PRIORITY priority_;
 
   // Shared event used for queue errors
   static HsaEvent* queue_event_;

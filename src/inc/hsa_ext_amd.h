@@ -826,6 +826,43 @@ hsa_status_t HSA_API
                               hsa_signal_t completion_signal);
 
 /**
+ * @brief Per-queue dispatch and wavefront scheduling priority.
+ */
+typedef enum hsa_amd_queue_priority_s {
+  /*
+  Below normal/high priority compute and all graphics
+  */
+  HSA_AMD_QUEUE_PRIORITY_LOW = 0,
+  /*
+  Above low priority compute, below high priority compute and all graphics
+  */
+  HSA_AMD_QUEUE_PRIORITY_NORMAL = 1,
+  /*
+  Above low/normal priority compute and all graphics
+  */
+  HSA_AMD_QUEUE_PRIORITY_HIGH = 2,
+} hsa_amd_queue_priority_t;
+
+/**
+ * @brief Modifies the dispatch and wavefront scheduling prioirty for a
+ * given compute queue. The default is HSA_AMD_QUEUE_PRIORITY_NORMAL.
+ *
+ * @param[in] queue Compute queue to apply new priority to.
+ *
+ * @param[in] priority Priority to associate with queue.
+ *
+ * @retval HSA_STATUS_SUCCESS if priority was changed successfully.
+ *
+ * @retval HSA_STATUS_ERROR_INVALID_QUEUE if queue is not a valid
+ * compute queue handle.
+ *
+ * @retval HSA_STATUS_ERROR_INVALID_ARGUMENT if priority is not a valid
+ * value from hsa_amd_queue_priority_t.
+ */
+hsa_status_t HSA_API hsa_amd_queue_set_priority(hsa_queue_t* queue,
+                                                hsa_amd_queue_priority_t priority);
+
+/**
  * @brief Type of accesses to a memory pool from a given agent.
  */
 typedef enum {
