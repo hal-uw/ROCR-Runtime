@@ -364,6 +364,7 @@ void HsaApiTable::UpdateAmdExts() {
   amd_ext_api.hsa_amd_ipc_memory_attach_fn = AMD::hsa_amd_ipc_memory_attach;
   amd_ext_api.hsa_amd_ipc_memory_detach_fn = AMD::hsa_amd_ipc_memory_detach;
   amd_ext_api.hsa_amd_queue_set_priority_fn = AMD::hsa_amd_queue_set_priority;
+  amd_ext_api.hsa_amd_queue_set_deadline_fn = AMD::hsa_amd_queue_set_deadline;
 }
 
 class Init {

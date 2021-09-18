@@ -674,4 +674,14 @@ hsa_status_t HSA_API hsa_amd_queue_set_priority(hsa_queue_t* queue,
   return cmd_queue->SetPriority(priority_it->second);
 }
 
+hsa_status_t HSA_API hsa_amd_queue_set_deadline(hsa_queue_t* queue,
+                                                uint64_t deadline) {
+  IS_OPEN();
+  IS_BAD_PTR(queue);
+  core::Queue* cmd_queue = core::Queue::Convert(queue);
+  IS_VALID(cmd_queue);
+
+  return cmd_queue->SetDeadline(deadline);
+}
+
 } // end of AMD namespace

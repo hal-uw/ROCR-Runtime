@@ -75,6 +75,8 @@ class AqlQueue : public core::Queue, public core::Signal {
   /// @brief Change the scheduling priority of the queue
   hsa_status_t SetPriority(HSA_QUEUE_PRIORITY priority) override;
 
+  hsa_status_t SetDeadline(uint64_t deadline) override;
+
   /// @brief Atomically reads the Read index of with Acquire semantics
   ///
   /// @return uint64_t Value of read index
@@ -409,6 +411,9 @@ class AqlQueue : public core::Queue, public core::Signal {
 
   // Thunk dispatch and wavefront scheduling priority
   HSA_QUEUE_PRIORITY priority_;
+
+  // Timing deadline for the queue
+  uint64_t deadline_;
 
   // Shared event used for queue errors
   static HsaEvent* queue_event_;

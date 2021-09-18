@@ -101,7 +101,8 @@ AqlQueue::AqlQueue(GpuAgent* agent, size_t req_size_pkts, HSAuint32 node_id,
       pm4_ib_buf_(NULL),
       pm4_ib_size_b_(0x1000),
 	  suspended_(false),
-	  priority_(HSA_QUEUE_PRIORITY_NORMAL) {
+	  priority_(HSA_QUEUE_PRIORITY_NORMAL),
+	  deadline_(-1) {
   if (!Queue::Shared::IsSharedObjectAllocationValid()) {
     return;
   }
@@ -161,7 +162,7 @@ AqlQueue::AqlQueue(GpuAgent* agent, size_t req_size_pkts, HSAuint32 node_id,
 
   HSAKMT_STATUS kmt_status;
   kmt_status = hsaKmtCreateQueue(node_id, HSA_QUEUE_COMPUTE_AQL, 100,
-                                 priority_, ring_buf_,
+                                 priority_, deadline_, ring_buf_,
                                  ring_buf_alloc_bytes_, NULL, &queue_rsrc);
   if (kmt_status != HSAKMT_STATUS_SUCCESS) return;
   queue_id_ = queue_rsrc.QueueId;
@@ -664,7 +665,7 @@ void AqlQueue::FreeRegisteredRingBuffer() {
 
 void AqlQueue::Suspend() {
   suspended_ = true;
-  auto err = hsaKmtUpdateQueue(queue_id_, 0, priority_, NULL, 0, NULL);
+  auto err = hsaKmtUpdateQueue(queue_id_, 0, priority_, deadline_, NULL, 0, NULL);
   assert(err == HSAKMT_STATUS_SUCCESS && "hsaKmtUpdateQueue failed.");
 }
 
@@ -680,7 +681,17 @@ hsa_status_t AqlQueue::SetPriority(HSA_QUEUE_PRIORITY priority) {
   }
 
   priority_ = priority;
-  auto err = hsaKmtUpdateQueue(queue_id_, 100, priority_, ring_buf_, ring_buf_alloc_bytes_, NULL);
+  auto err = hsaKmtUpdateQueue(queue_id_, 100, priority_, deadline_, ring_buf_, ring_buf_alloc_bytes_, NULL);
+  return (err == HSAKMT_STATUS_SUCCESS ? HSA_STATUS_SUCCESS : HSA_STATUS_ERROR_OUT_OF_RESOURCES);
+}
+
+hsa_status_t AqlQueue::SetDeadline(uint64_t deadline) {
+  if (suspended_) {
+    return HSA_STATUS_ERROR_INVALID_QUEUE;
+  }
+
+  deadline_ = deadline;
+  auto err = hsaKmtUpdateQueue(queue_id_, 100, priority_, deadline_, ring_buf_, ring_buf_alloc_bytes_, NULL);
   return (err == HSAKMT_STATUS_SUCCESS ? HSA_STATUS_SUCCESS : HSA_STATUS_ERROR_OUT_OF_RESOURCES);
 }
 

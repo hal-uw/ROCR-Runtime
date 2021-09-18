@@ -186,6 +186,9 @@ class Queue : public Checked<0xFA3906A679F9DB49>,
   /// @brief Change the scheduling priority of the queue
   virtual hsa_status_t SetPriority(HSA_QUEUE_PRIORITY priority) = 0;
 
+  /// @brief Change the deadline of the queue
+  virtual hsa_status_t SetDeadline(uint64_t deadline) = 0;
+
   /// @brief Reads the Read Index of Queue using Acquire semantics
   ///
   /// @return uint64_t Value of Read index

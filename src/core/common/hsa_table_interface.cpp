@@ -1081,3 +1081,8 @@ hsa_status_t HSA_API hsa_amd_queue_set_priority(hsa_queue_t* queue,
                                                 hsa_amd_queue_priority_t priority) {
   return amdExtTable->hsa_amd_queue_set_priority_fn(queue, priority);
 }
+
+hsa_status_t HSA_API hsa_amd_queue_set_deadline(hsa_queue_t* queue,
+                                                uint64_t deadline) {
+  return amdExtTable->hsa_amd_queue_set_deadline_fn(queue, deadline);
+}

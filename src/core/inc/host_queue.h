@@ -61,6 +61,10 @@ class HostQueue : public Queue {
     return HSA_STATUS_ERROR_INVALID_QUEUE;
   }
 
+  hsa_status_t SetDeadline(uint64_t deadline) override {
+    return HSA_STATUS_ERROR_INVALID_QUEUE;
+  }
+
 
   uint64_t LoadReadIndexAcquire() override {
     return atomic::Load(&amd_queue_.read_dispatch_id,

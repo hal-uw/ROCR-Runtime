@@ -442,7 +442,7 @@ hsa_status_t BlitSdma<RingIndexTy, HwIndexMonotonic, SizeToCountOffset>::Initial
   // device.
   const HSA_QUEUE_TYPE kQueueType_ = HSA_QUEUE_SDMA;
   if (HSAKMT_STATUS_SUCCESS != hsaKmtCreateQueue(amd_gpu_agent.node_id(), kQueueType_, 100,
-                                                 HSA_QUEUE_PRIORITY_MAXIMUM, queue_start_addr_,
+                                                 HSA_QUEUE_PRIORITY_MAXIMUM, -1, queue_start_addr_,
                                                  kQueueSize, NULL, &queue_resource_)) {
     Destroy(agent);
     return HSA_STATUS_ERROR_OUT_OF_RESOURCES;
