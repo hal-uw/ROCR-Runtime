@@ -111,14 +111,14 @@ GpuAgent::GpuAgent(HSAuint32 node, const HsaNodeProperties& node_props)
   max_queues_ = core::Runtime::runtime_singleton_->flag().max_queues();
 #if !defined(HSA_LARGE_MODEL) || !defined(__linux__)
   if (max_queues_ == 0) {
-    max_queues_ = 10;
+    max_queues_ = 256;
   }
-  max_queues_ = std::min(10U, max_queues_);
+  max_queues_ = std::min(256U, max_queues_);
 #else
   if (max_queues_ == 0) {
-    max_queues_ = 128;
+    max_queues_ = 256;
   }
-  max_queues_ = std::min(128U, max_queues_);
+  max_queues_ = std::min(256U, max_queues_);
 #endif
 
   // Populate region list.
@@ -341,7 +341,7 @@ void GpuAgent::InitScratchPool() {
 
 #if defined(HSA_LARGE_MODEL) && defined(__linux__)
   // For 64-bit linux use max queues unless otherwise specified
-  if ((max_scratch_len == 0) || (max_scratch_len > 4294967296)) {
+  if ((max_scratch_len == 0)) {
     max_scratch_len = 4294967296;  // 4GB apeture max
   }
 #endif
